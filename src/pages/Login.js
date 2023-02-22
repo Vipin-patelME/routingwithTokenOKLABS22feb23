@@ -23,42 +23,44 @@ const Login = ()=>{
         fetch(url, options)
         .then((res)=>{
             console.log(res)
-            if (res.status !== 200){
+            if (res.status === 400){
                 alert("Invalid Credintials")
             }
-            return res.json()
+            else{
+                return res.json()
+            }
         })
         .then((data)=>{
             console.log(data)
-            
-            
             try{
-                localStorage.setItem("role", JSON.stringify(data.data.role))
-                localStorage.setItem("token", JSON.stringify(data.data.token))
-
-                if (data.data.role === "admin"){
-                    window.location.href = "/admin"
-                }
-                if (data.data.role === "reseller"){
-                    window.location.href = '/reseller'
-                }
-                if (data.data.role === "acount_manager"){
-                    window.location.href = '/accountmanager'
-                }
-                if (data.data.role === "enduser"){
-                    window.location.href = '/enduser'
+                if (data.code === 200){
+                    localStorage.setItem("token", data.data.token)
+                    localStorage.setItem("role", data.data.role)
+    
+                    if (data.data.role === "admin"){
+                        window.location.href = "/admin"
+                    }
+                    if (data.data.role === "reseller"){
+                        window.location.href = "/reseller"
+                    }
+                    if (data.data.role === "enduser"){
+                        window.location.href = "/enduser"
+                    }
+                    if (data.data.role === "account_manager"){
+                        window.location.href = "/accountmanager"
+                    }
                 }
                 else{
                     alert("Invalid credentials")
                 }
             }
             catch(error){
-                alert("Invalid credentials")
+                console.log(error)
             }
-        
-    })
+            
+        })
         .catch((err)=>{
-            alert(err)
+            alert("something went wrong")
         })
     }
 
